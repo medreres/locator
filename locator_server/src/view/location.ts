@@ -2,6 +2,7 @@ import { IVenue } from './../model/venue';
 import { Request, Response } from 'express'
 import { getNearbyPlaces, getParent } from '../util/format';
 import { getPlaces } from '../api/getPlaces';
+import { MAX_DISTANCE } from '../config/default.json'
 
 // ! Problems with  data
 /**
@@ -45,7 +46,7 @@ export const getLocation = async (req: Request, res: Response) => {
 
 
     // if there are places nearby within the error radius, chose the first one, or its parent (if exist)
-    const MAX_DISTANCE = 50; // ? error margin (meters)
+    //  MAX_DISTANCE = 50 error margin (meters)
     if (results[0].distance < MAX_DISTANCE) {
         if (results[0].related_places?.parent)
             result = getParent(results[0].related_places.parent.name, results);

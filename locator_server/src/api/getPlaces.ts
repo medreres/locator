@@ -1,5 +1,5 @@
 import { IVenue } from './../model/venue';
-const RADIUS = 200; // ? in meters
+import { RADIUS } from '../config/default.json'
 
 export async function getPlaces(lat: string, long: string) {
     const searchParams = new URLSearchParams({
