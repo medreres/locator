@@ -1,7 +1,8 @@
-import { Button, Card, CardActions, CardContent, CardMedia, Chip, TextField, Typography } from '@mui/material'
+import { Button, TextField } from '@mui/material'
 import { Box, Stack } from '@mui/system'
 import { Suspense, useRef, useState } from 'react'
 import { getLocation } from './api/location';
+import Locations from './components/Locations';
 import { Location } from './models/venue';
 
 function App() {
@@ -16,8 +17,6 @@ function App() {
     getLocation(lat, long).then(result => setLocation(result))
   };
 
-  console.log(location)
-
   return (
     <Box width='100vw' display='flex' flexDirection='column' alignItems='center' pt={5}>
 
@@ -26,29 +25,7 @@ function App() {
         <TextField inputRef={longRef} label='Longtitude' type='number' />
         <Button onClick={handleRequest} variant='outlined'>Get Location</Button>
       </Stack>
-
-      {location != null && (
-        <>
-          {location?.result ? (
-            <>
-              <Typography my={2} variant='body1'>It's seems that you are here</Typography>
-              <Typography variant='h3' textAlign={'center'}>{location.result.name}</Typography>
-            </>
-          ) :
-            <Typography my={2} variant='body1'>Couldn't find exact location</Typography>
-          }
-
-          {location?.placesNearby && (
-            <>
-              <Typography my={2} variant='body2'>Places nearby</Typography>
-              <Stack direction='row' gap={2}>
-                {location.placesNearby.map(place => <Chip key={place.fsq_id} label={place.name} variant="outlined" />)}
-              </Stack>
-            </>
-          )}
-        </>
-      )}
-
+      <Locations location={location} />
     </Box >
   )
 }

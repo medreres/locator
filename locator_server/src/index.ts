@@ -1,4 +1,3 @@
-import { config } from './config';
 import express from 'express';
 import dotenv from 'dotenv'
 import locationRouter from './routes/location';
@@ -14,4 +13,4 @@ app.use(locationRouter);
 app.get('/', (req, res) => { res.send('Hello world') })
 
 // spin up 
-app.listen(config.server.port, () => { console.log('server listening on port ' + config.server.port) });
+app.listen(process.env.PORT || 3173, () => { console.log('server listening on port ' + (process.env.PORT || 3000)) });
