@@ -13,13 +13,14 @@ import {
   TextField,
 } from "@mui/material";
 import { useState } from "react";
-import { categories } from "../data/categories.json";
+import categories from "../data/categoriesId.json";
 
 interface ISelectCategories {
   category: string[];
   setCategory: (value: string[]) => void;
 }
 export default function SelectCategories({ category, setCategory }: ISelectCategories) {
+  // const categories = Object.entries(categories).map(([key, value]))
   //   const handleChange = (e) => {};
   return (
     <FormControl sx={{ width: 300 }}>
@@ -32,7 +33,9 @@ export default function SelectCategories({ category, setCategory }: ISelectCateg
         multiple
         id="category-multiple-select"
         // disableClearable
-        options={categories.map((option) => option)}
+        options={
+          Object.keys(categories)
+        }
         renderInput={(params) => (
           <TextField
             {...params}

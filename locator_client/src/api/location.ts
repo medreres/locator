@@ -5,7 +5,7 @@ export interface IParams {
   longtitude: string;
   radius?: number;
   limit?: number;
-  category: string[];
+  category: string;
 }
 export const getLocation = async (params: IParams) => {
   const url = "/location",
