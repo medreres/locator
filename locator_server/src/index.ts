@@ -10,7 +10,6 @@ dotenv.config();
 // routes
 app.use(locationRouter);
 
-app.get('/', (req, res) => { res.send('Hello world') })
-
 // spin up 
-app.listen(process.env.PORT || 3173, () => { console.log('server listening on port ' + (process.env.PORT || 3000)) });
+const PORT = process.env.PORT || 3173;
+app.listen(PORT, () => { console.log('server listening on port ' + PORT) });

@@ -1,7 +1,7 @@
 import { IVenue } from './../model/venue';
 import { Request, Response } from 'express'
-import { getNearbyPlaces, getParent } from '../util/format';
-import { getPlaces } from '../api/getPlaces';
+import { getDistanceFromLatLonInM, getNearbyPlaces, getParent } from '../util/format';
+import { fetchPlaces } from '../api/fetchPlaces';
 import { MAX_DISTANCE } from '../config/default.json'
 
 // ! Problems with  data
@@ -34,7 +34,7 @@ export const getLocation = async (req: Request, res: Response) => {
     if (!long || !lat) return res.status(400).json({ error: 'Invalid longitude or latitude' });
 
     // fetch places
-    const results = await getPlaces(lat as any, long as any);
+    const results = await fetchPlaces(lat as any, long as any);
 
     let result: IVenue | undefined = undefined;
     let placesNearby: IVenue[] | undefined = undefined;
@@ -47,7 +47,9 @@ export const getLocation = async (req: Request, res: Response) => {
 
     // if there are places nearby within the error radius, chose the first one, or its parent (if exist)
     //  MAX_DISTANCE = 50 error margin (meters)
-    if (results[0].distance < MAX_DISTANCE) {
+    const { latitude: lat1, longitude: long1 } = results[0].geocodes.main;
+    const distance = getDistanceFromLatLonInM(+lat, +long, lat1, long1)
+    if (distance < MAX_DISTANCE) {
         if (results[0].related_places?.parent)
             result = getParent(results[0].related_places.parent.name, results);
         // ! where problem with inconsistent data could arrise
@@ -57,7 +59,16 @@ export const getLocation = async (req: Request, res: Response) => {
     }
 
     // show the places nearby without the current place
-    placesNearby = getNearbyPlaces(results, result);
+    // if current place is unavailable just pass object containing the current coordianates
+    const currentPlace: IVenue = result || {
+        geocodes: {
+            main: {
+                latitude: lat,
+                longitude: long
+            }
+        }
+    } as any;
+    placesNearby = getNearbyPlaces(results, currentPlace);
 
     res.json({ result, placesNearby })
 }

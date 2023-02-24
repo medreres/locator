@@ -13,34 +13,34 @@ export type IPoint = {
  * go through all places and find the parent venue
  */
 export function getParent(name: string, places: IVenue[]): IVenue | undefined {
-    return places.find(place => {
-        // console.log('place.name', place.name)
-        return place.name.includes(name)
-    })
+    // includes method instead of string comparision because parent's name can differ
+    return places.find(place => place.name.toLowerCase().includes(name.toLowerCase()))
 }
-
-
 
 /**
  * return all the places nearby without the current place in specified radius
  */
-export function getNearbyPlaces(places: IVenue[], result: IVenue | undefined) {
-    return places.filter(place => place.fsq_id != result?.fsq_id && place.distance < RADIUS).slice(0, PLACES_LIMIT);
+export function getNearbyPlaces(places: IVenue[], currentPlace: IVenue) {
+    // coordinates of current palce
+    const { latitude: lat1, longitude: long1 } = currentPlace.geocodes.main;
+    return places.filter(place => {
+        const { latitude: lat2, longitude: long2 } = place.geocodes.main
+        const distance = getDistanceFromLatLonInM(lat1, long1, lat2, long2)
+        return place.fsq_id != currentPlace?.fsq_id && distance < RADIUS
+    }).slice(0, PLACES_LIMIT);
 }
 
 /**
  * 
- * @param point1 First point
- * @param point2 Second point
  * @returns distance between two points in meters
  */
-export function getDistanceFromLatLonInM(point1: IPoint, point2: IPoint): number {
+export function getDistanceFromLatLonInM(lat1: number, long1: number, lat2: number, long2: number): number {
     const R = 6371000; // Radius of the earth in km
-    const dLat = deg2rad(point2.lat - point1.lat);  // deg2rad below
-    const dLon = deg2rad(point2.long - point1.long);
+    const dLat = deg2rad(lat2 - lat1);  // deg2rad below
+    const dLon = deg2rad(long2 - long1);
     const a =
         Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-        Math.cos(deg2rad(point1.lat)) * Math.cos(deg2rad(point2.lat)) *
+        Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
         Math.sin(dLon / 2) * Math.sin(dLon / 2)
         ;
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));

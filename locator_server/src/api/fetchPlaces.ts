@@ -1,7 +1,7 @@
-import { IVenue } from './../model/venue';
+import { IVenue } from '../model/venue';
 import { RADIUS } from '../config/default.json'
 
-export async function getPlaces(lat: string, long: string) {
+export async function fetchPlaces(lat: string, long: string) {
     const searchParams = new URLSearchParams({
 
         radius: RADIUS.toString(), // radius in meters
@@ -25,9 +25,10 @@ export async function getPlaces(lat: string, long: string) {
         }
     });
 
-    type ibody = {
+    type IBody = {
         results: IVenue[];
     }
-    const { results }: ibody = await response.json();
+    const { results }: IBody = await response.json();
+
     return results;
 }

@@ -1,5 +1,5 @@
 {
     "MAX_DISTANCE": 50,
-    "RADIUS": 0,
+    "RADIUS": 200,
     "PLACES_LIMIT": 5
 }
