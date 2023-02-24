@@ -6,7 +6,8 @@ export async function fetchPlaces(
   lat: string,
   long: string,
   radius: number = RADIUS,
-  limit: number = FETCH_MAX_PLACES
+  limit: number = FETCH_MAX_PLACES,
+  placeType: string[] = []
 ): Promise<IVenue[]> {
   const BASE_URL = "https://api.foursquare.com";
   const response = await axios.get(BASE_URL + "/v3/places/search", {
@@ -16,8 +17,8 @@ export async function fetchPlaces(
     },
     params: {
       radius: radius.toString(), // radius in meters
-      // categories: '17069,17070',
-      // query: '',
+      // TODO types of places
+      query: placeType.join(","),
       ll: `${lat},${long}`,
       limit: limit.toString(),
       // open_now: 'true',
