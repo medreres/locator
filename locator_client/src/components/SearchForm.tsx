@@ -1,5 +1,5 @@
 import { Button, Stack, TextField } from "@mui/material";
-import React, { useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { getLocation, IParams } from "../api/location";
 import { formatCategories } from "../util/formatCategories";
 import SelectCategories from "./SelectCategories";

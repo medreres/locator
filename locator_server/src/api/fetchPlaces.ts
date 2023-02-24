@@ -2,6 +2,15 @@ import { IVenue } from "../model/venue";
 import { RADIUS, FETCH_MAX_PLACES } from "../config/default.json";
 import axios from "axios";
 
+/**
+ * 
+ * @param lat latitude 
+ * @param long longtitude
+ * @param radius search radius
+ * @param limit limit of places fetched
+ * @param categories ids of categories
+ * @returns all the places nearby, filtered by params
+ */
 export async function fetchPlaces(
   lat: string,
   long: string,
@@ -10,7 +19,6 @@ export async function fetchPlaces(
   categories: string = ""
 ): Promise<IVenue[]> {
   const BASE_URL = "https://api.foursquare.com";
-  // console.log(placeType);
   const response = await axios.get(BASE_URL + "/v3/places/search", {
     headers: {
       Accept: "application/json",
@@ -18,13 +26,10 @@ export async function fetchPlaces(
     },
     params: {
       radius: radius.toString(), // radius in meters
-      // TODO types of places
-      // query: 'cafe',
-      categories: categories,
-      ll: `${lat},${long}`,
-      limit: limit.toString(),
-      // open_now: 'true',
-      sort: "DISTANCE",
+      categories: categories, // ids of categories of possible places
+      ll: `${lat},${long}`, // coordinates
+      limit: limit.toString(), // limit of places fetched
+      sort: "DISTANCE", // sort by distance ascending
     },
   });
 

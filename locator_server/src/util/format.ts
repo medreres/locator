@@ -1,5 +1,5 @@
 import { IVenue } from "../model/venue";
-import { RADIUS, NEARBY_PLACES_LIMIT } from "../config/default.json";
+import { RADIUS } from "../config/default.json";
 
 /**
  * Point with coordinates in longtitude and latitude

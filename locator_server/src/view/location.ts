@@ -28,9 +28,7 @@ import { MAX_DISTANCE, FETCH_MAX_PLACES, RADIUS } from "../config/default.json";
  */
 export const getLocation = async (req: Request, res: Response) => {
   // main parameters for search request
-  // TODO make function parser
   const { latitude: lat, longtitude: long, limit = FETCH_MAX_PLACES, radius = RADIUS, category = "" } = req.query;
-  // const category = typeof c === "string" ? c.split(",") : [];
 
   // validate latitude and longitude
   if (!long || !lat) return res.status(400).json({ error: "Invalid longitude or latitude" });
@@ -41,13 +39,12 @@ export const getLocation = async (req: Request, res: Response) => {
   let result: IVenue | undefined = undefined;
   let placesNearby: IVenue[] | undefined = undefined;
 
-  // if no places, return empty
+  // if no places, return empty response
   if (results.length === 0) {
     return res.json({ result, placesNearby });
   }
 
   // if there are places nearby within the error radius, chose the first one, or its parent (if exist)
-  //  MAX_DISTANCE = 50 error margin (meters)
   const { latitude: lat1, longitude: long1 } = results[0].geocodes.main;
   const distance = getDistanceFromLatLonInM(+lat, +long, lat1, long1);
   if (distance < MAX_DISTANCE) {

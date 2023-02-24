@@ -20,8 +20,6 @@ interface ISelectCategories {
   setCategory: (value: string[]) => void;
 }
 export default function SelectCategories({ category, setCategory }: ISelectCategories) {
-  // const categories = Object.entries(categories).map(([key, value]))
-  //   const handleChange = (e) => {};
   return (
     <FormControl sx={{ width: 300 }}>
       <Autocomplete
@@ -33,9 +31,7 @@ export default function SelectCategories({ category, setCategory }: ISelectCateg
         multiple
         id="category-multiple-select"
         // disableClearable
-        options={
-          Object.keys(categories)
-        }
+        options={Object.keys(categories)}
         renderInput={(params) => (
           <TextField
             {...params}
