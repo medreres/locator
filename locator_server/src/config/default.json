@@ -1,5 +1,6 @@
 {
     "MAX_DISTANCE": 50,
     "RADIUS": 200,
-    "PLACES_LIMIT": 5
+    "NEARBY_PLACES_LIMIT": 5,
+    "FETCH_MAX_PLACES": 50
 }

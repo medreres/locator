@@ -7,21 +7,25 @@ import { Location } from "./models/venue";
 
 function App() {
   const latRef = useRef<HTMLInputElement>(null);
-  // const longRef = useRef<HTMLInputElement>(null);
+  const limitRef = useRef<HTMLInputElement>(null);
+  const radiustRef = useRef<HTMLInputElement>(null);
   const [location, setLocation] = useState<Location | null>(null);
 
-  const handleRequest = () => {
+  const handleRequest = (e: any) => {
+    e.preventDefault();
+
     const ll = latRef.current!.value;
     const [lat, long] = ll.split(",").map((value) => value.trim());
-    // console.log("lat", lat);
-    // console.log('long', long)
-    // const long = longRef.current!.value;
+    const limit = limitRef.current!.value;
+    const radius = radiustRef.current!.value;
 
-    getLocation(lat, long).then(result => setLocation(result))
+    getLocation(lat, long, +radius, +limit).then((result) => setLocation(result));
   };
 
   return (
     <Box
+      onSubmit={handleRequest}
+      component="form"
       width="100vw"
       display="flex"
       flexDirection="column"
@@ -32,13 +36,35 @@ function App() {
         gap={2}
         maxWidth="300px">
         <TextField
+          required
           inputRef={latRef}
           label="Latitute, Longtitude"
           type="text"
         />
-        {/* <TextField inputRef={longRef} label='Longtitude' type='number' /> */}
+        <TextField
+          required
+          inputRef={limitRef}
+          inputProps={{
+            max: 50,
+            min: 1,
+            defaultValue: 25,
+          }}
+          label="Limit"
+          type="number"
+        />
+        <TextField
+          required
+          inputRef={radiustRef}
+          inputProps={{
+            max: 5000,
+            min: 30,
+            defaultValue: 200,
+          }}
+          label="Radius"
+          type="number"
+        />
         <Button
-          onClick={handleRequest}
+          type="submit"
           variant="outlined">
           Get Location
         </Button>
