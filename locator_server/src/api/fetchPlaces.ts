@@ -8,7 +8,8 @@ export async function fetchPlaces(
   radius: number = RADIUS,
   limit: number = FETCH_MAX_PLACES
 ): Promise<IVenue[]> {
-  const response = await axios.get("https://api.foursquare.com/v3/places/search", {
+  const BASE_URL = "https://api.foursquare.com";
+  const response = await axios.get(BASE_URL + "/v3/places/search", {
     headers: {
       Accept: "application/json",
       Authorization: process.env.FORSQUARE_TOKEN as string,

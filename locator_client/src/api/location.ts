@@ -1,15 +1,17 @@
-export const getLocation = async (lat: string, long: string, radius: number, limit: number) => {
-  const params = new URLSearchParams({
-    longtitude: long,
-    latitude: lat,
-    limit: limit.toString(),
-    radius: radius.toString()
-  });
+import { buildUrl } from "../util/buildUrl";
 
-  const url = new URL("http://localhost:3173/location");
-  url.search = params.toString();
+export interface IParams {
+  latitude: string;
+  longtitude: string;
+  radius?: number;
+  limit?: number;
+}
+export const getLocation = async (params: IParams) => {
+  const url = "/location",
+    base = "http://localhost:3173";
+  const buildedUrl = buildUrl(url, base, params);
 
-  return fetch(url.toString())
+  return fetch(buildedUrl.toString())
     .then((response) => response.json())
     .then((result) => result)
     .catch((err) => console.log(err));

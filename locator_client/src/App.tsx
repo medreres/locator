@@ -1,6 +1,6 @@
 import { Button, TextField } from "@mui/material";
 import { Box, Stack } from "@mui/system";
-import { Suspense, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { getLocation } from "./api/location";
 import Locations from "./components/Locations";
 import { Location } from "./models/venue";
@@ -19,7 +19,12 @@ function App() {
     const limit = limitRef.current!.value;
     const radius = radiustRef.current!.value;
 
-    getLocation(lat, long, +radius, +limit).then((result) => setLocation(result));
+    getLocation({
+      latitude: lat,
+      longtitude: long,
+      limit: +limit,
+      radius: +radius,
+    }).then((result) => setLocation(result));
   };
 
   return (
@@ -56,7 +61,7 @@ function App() {
           required
           inputRef={radiustRef}
           inputProps={{
-            max: 5000,
+            max: 3000,
             min: 30,
             defaultValue: 200,
           }}

@@ -43,9 +43,10 @@ export default function Locations({ location }: ILocations) {
                 justifyContent="center"
                 width={"60vw"}>
                 {location.placesNearby.map((place) => (
-                  <Grid item>
+                  <Grid
+                    item
+                    key={place.fsq_id}>
                     <Chip
-                      key={place.fsq_id}
                       label={place.name}
                       variant="outlined"
                     />
