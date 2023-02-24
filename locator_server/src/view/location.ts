@@ -67,7 +67,7 @@ export const getLocation = async (req: Request, res: Response) => {
         },
       },
     } as any);
-  placesNearby = getNearbyPlaces(results, currentPlace, +limit);
+  placesNearby = getNearbyPlaces(results, currentPlace);
 
   res.json({ result, placesNearby });
 };

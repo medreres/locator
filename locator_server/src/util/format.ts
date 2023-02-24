@@ -20,16 +20,14 @@ export function getParent(name: string, places: IVenue[]): IVenue | undefined {
 /**
  * return all the places nearby without the current place in specified radius
  */
-export function getNearbyPlaces(places: IVenue[], currentPlace: IVenue, limit: number = NEARBY_PLACES_LIMIT) {
+export function getNearbyPlaces(places: IVenue[], currentPlace: IVenue) {
   // coordinates of current palce
   const { latitude: lat1, longitude: long1 } = currentPlace.geocodes.main;
-  return places
-    .filter((place) => {
-      const { latitude: lat2, longitude: long2 } = place.geocodes.main;
-      const distance = getDistanceFromLatLonInM(lat1, long1, lat2, long2);
-      return place.fsq_id != currentPlace?.fsq_id && distance < RADIUS;
-    })
-    .slice(0, limit);
+  return places.filter((place) => {
+    const { latitude: lat2, longitude: long2 } = place.geocodes.main;
+    const distance = getDistanceFromLatLonInM(lat1, long1, lat2, long2);
+    return place.fsq_id != currentPlace?.fsq_id && distance < RADIUS;
+  });
 }
 
 /**
