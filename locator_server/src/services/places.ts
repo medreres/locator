@@ -5,8 +5,7 @@ import { MAX_RADIUS, MIN_RADIUS, EXPECTED_NUMBER_OF_PLACES, ERROR_MARGIN } from 
 import { getDistanceFromLatLonInM } from "../util/format";
 
 // every time when number of places is not large enough
-// make the radius bigger/lesser
-// ? by 20%
+// make the radius bigger/lesser depending on difference betwen result.length and expected number of places
 // if places are way too much, make radius lesser
 // do until number of places is as expected or radius is too big/small
 

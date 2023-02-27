@@ -34,7 +34,7 @@ export const getLocation = async (req: Request, res: Response) => {
   try {
     ({ categories, lat, long } = parseLocationParams(req));
   } catch (err) {
-    return res.status(404).json({ error: (err as any).message });
+    return res.status(400).json({ error: (err as any).message });
   }
 
   let currentPlace: IVenue | undefined = undefined;
@@ -52,7 +52,7 @@ export const getLocation = async (req: Request, res: Response) => {
 
   // if no places are found, return empty results
   if (results.length === 0) {
-    return res.json({ currentPlace, placesNearby });
+    return res.status(200).json({ currentPlace, placesNearby });
   }
 
   // try to get current place
@@ -72,5 +72,5 @@ export const getLocation = async (req: Request, res: Response) => {
     } as any);
   placesNearby = getNearbyPlaces(results, currentCoordinates);
 
-  res.json({ currentPlace, placesNearby });
+  res.status(200).json({ currentPlace, placesNearby });
 };
