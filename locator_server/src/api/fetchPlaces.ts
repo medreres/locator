@@ -1,5 +1,5 @@
 import { IVenue } from "../model/venue";
-import { RADIUS, FETCH_MAX_PLACES } from "../config/default.json";
+import { STARTING_RADIUS, FETCH_MAX_PLACES } from "../config/default.json";
 import axios from "axios";
 
 /**
@@ -14,7 +14,7 @@ import axios from "axios";
 export async function fetchPlaces(
   lat: string,
   long: string,
-  radius: number = RADIUS,
+  radius: number = STARTING_RADIUS,
   limit: number = FETCH_MAX_PLACES,
   categories: string = ""
 ): Promise<IVenue[]> {

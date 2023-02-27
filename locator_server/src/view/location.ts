@@ -2,7 +2,13 @@ import { IVenue } from "./../model/venue";
 import { Request, Response } from "express";
 import { getDistanceFromLatLonInM, getNearbyPlaces, getParent } from "../util/format";
 import { fetchPlaces } from "../api/fetchPlaces";
-import { MAX_DISTANCE, FETCH_MAX_PLACES, RADIUS } from "../config/default.json";
+import {
+  MAX_DISTANCE,
+  FETCH_MAX_PLACES,
+  STARTING_RADIUS,
+  EXPECTED_NUMBER_OF_PLACES,
+  MAX_RADIUS,
+} from "../config/default.json";
 
 // ! Problems with  data
 /**
@@ -28,16 +34,33 @@ import { MAX_DISTANCE, FETCH_MAX_PLACES, RADIUS } from "../config/default.json";
  */
 export const getLocation = async (req: Request, res: Response) => {
   // main parameters for search request
-  const { latitude: lat, longtitude: long, limit = FETCH_MAX_PLACES, radius = RADIUS, category = "" } = req.query;
+  const { latitude: lat, longtitude: long, limit = EXPECTED_NUMBER_OF_PLACES, category = "" } = req.query;
+  let { radius = STARTING_RADIUS } = req.query;
 
   // validate latitude and longitude
   if (!long || !lat) return res.status(400).json({ error: "Invalid longitude or latitude" });
 
-  // fetch places
-  const results = await fetchPlaces(lat as string, long as string, +radius, +limit, category as string);
-
   let result: IVenue | undefined = undefined;
   let placesNearby: IVenue[] | undefined = undefined;
+  let results: IVenue[] | undefined = await fetchPlaces(
+    lat as string,
+    long as string,
+    +radius,
+    FETCH_MAX_PLACES,
+    category as string
+  );
+
+  // every time when number of places is not large enough
+  // ? make the radius bigger by 200m or 20%
+  // do until number of places is large enough or radius is too big
+  while (results.length < limit && radius < MAX_RADIUS) {
+    console.log("radius is not big enough, making bigger");
+    radius = Math.round(+radius * 1.3);
+    if (radius > MAX_RADIUS) radius = MAX_RADIUS;
+    results = await fetchPlaces(lat as string, long as string, +radius, +limit, category as string);
+  }
+
+  console.log("radius", radius);
 
   // if no places, return empty response
   if (results.length === 0) {
@@ -66,7 +89,7 @@ export const getLocation = async (req: Request, res: Response) => {
         },
       },
     } as any);
-  placesNearby = getNearbyPlaces(results, currentPlace);
+  placesNearby = getNearbyPlaces(results, currentPlace, +limit, +radius);
 
   res.json({ result, placesNearby });
 };
