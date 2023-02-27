@@ -1,9 +1,9 @@
 import { IParams } from "../interfaces/venue";
+import { BASE_URL } from "../config/default.json";
 import { buildUrl } from "../util/buildUrl";
 export const getLocation = async (params: IParams) => {
-  const url = "/location",
-    base = "http://localhost:3173";
-  const buildedUrl = buildUrl(url, base, params);
+  const url = "/location";
+  const buildedUrl = buildUrl(url, BASE_URL, params);
 
   return fetch(buildedUrl.toString())
     .then((response) => response.json())
