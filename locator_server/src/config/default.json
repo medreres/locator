@@ -1,4 +1,5 @@
 {
+  "BASE_URL": "https://api.foursquare.com",
   "ERROR_MARGIN": 15,
   "FETCH_MAX_PLACES": 50,
   "EXPECTED_NUMBER_OF_PLACES": 10,

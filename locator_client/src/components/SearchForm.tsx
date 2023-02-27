@@ -12,8 +12,6 @@ interface ISearchForm {
 }
 export default function SearchForm({ setLocation, setIsPending, isPending }: ISearchForm) {
   const latRef = useRef<HTMLInputElement>(null);
-  const limitRef = useRef<HTMLInputElement>(null);
-  const radiusRef = useRef<HTMLInputElement>(null);
   const [categories, setCategories] = useState<string[]>([]);
 
   const handleRequest = (e: any) => {
@@ -23,15 +21,11 @@ export default function SearchForm({ setLocation, setIsPending, isPending }: ISe
 
     const ll = latRef.current!.value;
     const [lat, long] = ll.split(",").map((value) => value.trim());
-    const limit = limitRef.current!.value;
-    const radius = radiusRef.current!.value;
     const categoriesId: string = formatCategories(categories);
 
     const params: IParams = {
       latitude: lat,
       longitude: long,
-      limit: limit,
-      radius: radius,
       categories: categoriesId,
     };
     getLocation(params).then((result) => {
@@ -53,28 +47,6 @@ export default function SearchForm({ setLocation, setIsPending, isPending }: ISe
         inputRef={latRef}
         label="Latitute, Longitutde"
         type="text"
-      />
-      <TextField
-        required
-        inputRef={limitRef}
-        inputProps={{
-          max: 50,
-          min: 1,
-          defaultValue: 10,
-        }}
-        label="Limit"
-        type="number"
-      />
-      <TextField
-        required
-        inputRef={radiusRef}
-        inputProps={{
-          max: 99999,
-          min: 31,
-          defaultValue: 100,
-        }}
-        label="Starting radius"
-        type="number"
       />
       <SelectCategories
         category={categories}

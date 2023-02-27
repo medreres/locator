@@ -17,7 +17,7 @@ export default function Locations({ location, isPending }: ILocations) {
     <>
       {location != null && (
         <>
-          {location?.result ? (
+          {location?.currentPlace ? (
             <>
               <Typography
                 my={2}
@@ -27,7 +27,7 @@ export default function Locations({ location, isPending }: ILocations) {
               <Typography
                 variant="h3"
                 textAlign={"center"}>
-                {location.result.name}
+                {location.currentPlace.name}
               </Typography>
             </>
           ) : (

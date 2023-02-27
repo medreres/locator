@@ -1,5 +1,5 @@
 export interface Location {
-  result: IVenue;
+  currentPlace: IVenue;
   placesNearby: IVenue[];
 }
 

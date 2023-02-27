@@ -1,4 +1,5 @@
 import { IVenue } from "../interfaces/venue";
+import { MAX_RADIUS, EXPECTED_NUMBER_OF_PLACES } from "../config/default.json";
 
 /**
  * Point with coordinates in longtitude and latitude
@@ -19,22 +20,17 @@ export function getParent(name: string, places: IVenue[]): IVenue | undefined {
 /**
  * return all the places nearby without the current place in specified radius
  */
-export function getNearbyPlaces(
-  places: IVenue[],
-  currentPlace: IVenue,
-  maxNumberOfPlaces: number,
-  // maxRadius: number = MAX_RADIUS
-) {
+export function getNearbyPlaces(places: IVenue[], currentPlace: IVenue) {
   // coordinates of current place
-  // const { latitude: lat1, longitude: long1 } = currentPlace.geocodes.main;
+  const { latitude: lat1, longitude: long1 } = currentPlace.geocodes.main;
   return places
     .filter((place) => {
-      // const { latitude: lat2, longitude: long2 } = place.geocodes.main;
-      // const distance = getDistanceFromLatLonInM(lat1, long1, lat2, long2);
-      // return place.fsq_id != currentPlace?.fsq_id && distance < maxRadius;
-      return place.fsq_id != currentPlace?.fsq_id;
+      const { latitude: lat2, longitude: long2 } = place.geocodes.main;
+      const distance = getDistanceFromLatLonInM(lat1, long1, lat2, long2);
+      return place.fsq_id != currentPlace?.fsq_id && distance < MAX_RADIUS;
+      // return place.fsq_id != currentPlace?.fsq_id;
     })
-    .slice(0, maxNumberOfPlaces); // if there are more places than needed, trim the remaining places
+    .slice(0, EXPECTED_NUMBER_OF_PLACES); // if there are more places than needed, trim the remaining places
 }
 
 /**

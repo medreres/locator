@@ -1,4 +1,4 @@
-import { STARTING_RADIUS, FETCH_MAX_PLACES } from "../config/default.json";
+import { BASE_URL } from "../config/default.json";
 import axios from "axios";
 import { buildUrl } from "../util/buildUrl";
 import { IVenue } from "../interfaces/venue";
@@ -11,8 +11,7 @@ import { IParams } from "../interfaces/api";
  */
 export async function fetchPlaces(params: IParams): Promise<IVenue[]> {
   const url = "/v3/places/search";
-  const base = "https://api.foursquare.com";
-  const buildedUrl = buildUrl(url, base, params);
+  const buildedUrl = buildUrl(url, BASE_URL, params);
 
   const response = await axios.get(buildedUrl.toString(), {
     headers: {
