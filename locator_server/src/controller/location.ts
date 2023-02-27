@@ -1,4 +1,4 @@
-import { IVenue } from "./../model/venue";
+import { IVenue } from "../model/venue";
 import { Request, Response } from "express";
 import { getDistanceFromLatLonInM, getNearbyPlaces, getParent } from "../util/format";
 import { fetchPlaces } from "../api/fetchPlaces";
@@ -52,30 +52,45 @@ export const getLocation = async (req: Request, res: Response) => {
   );
 
   // every time when number of places is not large enough
-  // ? make the radius bigger by 20%
+  // ? make the radius bigger/lesser by 20%
   // if places are way too much, make radius lesser
   // do until number of places is as expected or radius is too big
   while (radius < MAX_RADIUS && radius > MIN_RADIUS) {
-    if (results.length > limit) {
-      console.log("radius way too big, making smaller");
+    if (results.length >= limit) {
       radius = Math.round(+radius * 0.8);
     } else {
-      console.log("radius way too small, making bigger");
       radius = Math.round(+radius * 1.2);
     }
+
     // bear in mind boundary conditions which may be jumped over
     if (radius > MAX_RADIUS) radius = MAX_RADIUS;
-    else radius = MIN_RADIUS;
+    else if (radius < MIN_RADIUS) radius = MIN_RADIUS;
 
     const newResult = await fetchPlaces(lat as string, long as string, +radius, +limit, category as string);
+    console.log("radius", radius);
 
     // if new request has smaller number of places, break the loop and take the last result
     // else make new request
-    if (newResult.length > limit) results = newResult;
-    else break;
+
+    if (results.length < limit) {
+      results = newResult;
+      continue;
+      // console.log("new length >= limit", newResult.length);
+      // results = newResult;
+    } else if (newResult.length < limit) break;
+
+    // console.log('newResult.length end', newResult.length)
+    // console.log('results.length', results.length)
+
+    // break;
+    // else if (newResult.length < limit && results.length >= limit) {
+    //   console.log("new length < limit and old result >= limit", newResult.length);
+    //   break;
+    // }
   }
 
-  console.log("radius", radius);
+  // console.log("results.length", results.length);
+  // console.log(results);
 
   // if no places, return empty response
   if (results.length === 0) {
@@ -104,7 +119,9 @@ export const getLocation = async (req: Request, res: Response) => {
         },
       },
     } as any);
-  placesNearby = getNearbyPlaces(results, currentPlace, +limit, +radius);
+  // placesNearby = getNearbyPlaces(results, currentPlace, +limit, +radius);
+  placesNearby = getNearbyPlaces(results, currentPlace, +limit);
+  // placesNearby = results;
 
   res.json({ result, placesNearby });
 };

@@ -24,15 +24,16 @@ export function getNearbyPlaces(
   places: IVenue[],
   currentPlace: IVenue,
   maxNumberOfPlaces: number,
-  maxRadius: number = MAX_RADIUS
+  // maxRadius: number = MAX_RADIUS
 ) {
-  // coordinates of current palce
-  const { latitude: lat1, longitude: long1 } = currentPlace.geocodes.main;
+  // coordinates of current place
+  // const { latitude: lat1, longitude: long1 } = currentPlace.geocodes.main;
   return places
     .filter((place) => {
-      const { latitude: lat2, longitude: long2 } = place.geocodes.main;
-      const distance = getDistanceFromLatLonInM(lat1, long1, lat2, long2);
-      return place.fsq_id != currentPlace?.fsq_id && distance < maxRadius;
+      // const { latitude: lat2, longitude: long2 } = place.geocodes.main;
+      // const distance = getDistanceFromLatLonInM(lat1, long1, lat2, long2);
+      // return place.fsq_id != currentPlace?.fsq_id && distance < maxRadius;
+      return place.fsq_id != currentPlace?.fsq_id;
     })
     .slice(0, maxNumberOfPlaces); // if there are more places than needed, trim the remaining places
 }
