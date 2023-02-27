@@ -27,6 +27,7 @@ export function getNearbyPlaces(places: IVenue[], currentPlace: IVenue) {
     .filter((place) => {
       const { latitude: lat2, longitude: long2 } = place.geocodes.main;
       const distance = getDistanceFromLatLonInM(lat1, long1, lat2, long2);
+      place.distance = distance;
       return place.fsq_id != currentPlace?.fsq_id && distance < MAX_RADIUS;
     })
     .slice(0, EXPECTED_NUMBER_OF_PLACES); // if there are more places than needed, trim the remaining places
@@ -45,7 +46,7 @@ export function getDistanceFromLatLonInM(lat1: number, long1: number, lat2: numb
     Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
   const d = R * c; // Distance in m
-  return d;
+  return +d.toFixed(0);
 }
 
 function deg2rad(deg: number) {

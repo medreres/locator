@@ -16,8 +16,8 @@ export async function findPlaces(params: IParams): Promise<IVenue[]> {
   while (radius < MAX_RADIUS && radius > MIN_RADIUS) {
     radius = getRadius(radius, results.length);
 
-    console.log("results.length", results.length);
-    console.log("radius", radius);
+    // console.log("results.length", results.length);
+    // console.log("radius", radius);
 
     // update value in params object
     params.radius = radius.toString();

@@ -46,7 +46,7 @@ export const getLocation = async (req: Request, res: Response) => {
     radius: STARTING_RADIUS.toString(),
     limit: LIMIT_NUMBER_OF_PLACES.toString(),
     categories: categories.toString(),
-    sort: "DISTANCE",
+    // sort: "DISTANCE",
   };
   const results = await findPlaces(params);
 
