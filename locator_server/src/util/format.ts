@@ -34,7 +34,7 @@ export function getNearbyPlaces(
       const distance = getDistanceFromLatLonInM(lat1, long1, lat2, long2);
       return place.fsq_id != currentPlace?.fsq_id && distance < maxRadius;
     })
-    .slice(0, maxNumberOfPlaces);
+    .slice(0, maxNumberOfPlaces); // if there are more places than needed, trim the remaining places
 }
 
 /**

@@ -3,11 +3,12 @@ import { Request, Response } from "express";
 import { getDistanceFromLatLonInM, getNearbyPlaces, getParent } from "../util/format";
 import { fetchPlaces } from "../api/fetchPlaces";
 import {
-  MAX_DISTANCE,
+  ERROR_MARGIN,
   FETCH_MAX_PLACES,
   STARTING_RADIUS,
   EXPECTED_NUMBER_OF_PLACES,
   MAX_RADIUS,
+  MIN_RADIUS,
 } from "../config/default.json";
 
 // ! Problems with  data
@@ -51,13 +52,27 @@ export const getLocation = async (req: Request, res: Response) => {
   );
 
   // every time when number of places is not large enough
-  // ? make the radius bigger by 200m or 20%
-  // do until number of places is large enough or radius is too big
-  while (results.length < limit && radius < MAX_RADIUS) {
-    console.log("radius is not big enough, making bigger");
-    radius = Math.round(+radius * 1.3);
+  // ? make the radius bigger by 20%
+  // if places are way too much, make radius lesser
+  // do until number of places is as expected or radius is too big
+  while (radius < MAX_RADIUS && radius > MIN_RADIUS) {
+    if (results.length > limit) {
+      console.log("radius way too big, making smaller");
+      radius = Math.round(+radius * 0.8);
+    } else {
+      console.log("radius way too small, making bigger");
+      radius = Math.round(+radius * 1.2);
+    }
+    // bear in mind boundary conditions which may be jumped over
     if (radius > MAX_RADIUS) radius = MAX_RADIUS;
-    results = await fetchPlaces(lat as string, long as string, +radius, +limit, category as string);
+    else radius = MIN_RADIUS;
+
+    const newResult = await fetchPlaces(lat as string, long as string, +radius, +limit, category as string);
+
+    // if new request has smaller number of places, break the loop and take the last result
+    // else make new request
+    if (newResult.length > limit) results = newResult;
+    else break;
   }
 
   console.log("radius", radius);
@@ -70,7 +85,7 @@ export const getLocation = async (req: Request, res: Response) => {
   // if there are places nearby within the error radius, chose the first one, or its parent (if exist)
   const { latitude: lat1, longitude: long1 } = results[0].geocodes.main;
   const distance = getDistanceFromLatLonInM(+lat, +long, lat1, long1);
-  if (distance < MAX_DISTANCE) {
+  if (distance < ERROR_MARGIN) {
     if (results[0].related_places?.parent) result = getParent(results[0].related_places.parent.name, results);
     // ! where problem with inconsistent data could arrise
     // if no parents found, return the closest place
