@@ -15,14 +15,12 @@ export async function findPlaces(params: IParams): Promise<IVenue[]> {
   let radius = +params.radius;
   while (radius < MAX_RADIUS && radius > MIN_RADIUS) {
     // TODO Зараз ĸроĸ зміни радіусу - завжди 20%, можна спробувати зробити його більш гнучĸим
-
-    // console.log("results.length", results.length);
     const dx = results.length / EXPECTED_NUMBER_OF_PLACES || 1;
-
     if (results.length >= EXPECTED_NUMBER_OF_PLACES) {
       radius = Math.round(+radius - radius * dx);
     } else {
-      radius = Math.round(+radius + radius * dx);
+      const growth = dx === 1 ? dx : 1 - dx;
+      radius = Math.round(+radius + radius * growth);
     }
 
     // bear in mind boundary conditions which may be jumped over
