@@ -32,7 +32,7 @@ export const getLocation = async (req: Request, res: Response) => {
   // extract the params needed for request
   let categories, lat, long;
   try {
-    ({ categories, lat, long } = parseLocationParams(req));     
+    ({ categories, lat, long } = parseLocationParams(req));
   } catch (err) {
     return res.status(404).json({ error: (err as any).message });
   }
@@ -49,6 +49,11 @@ export const getLocation = async (req: Request, res: Response) => {
     sort: "DISTANCE",
   };
   const results = await findPlaces(params);
+
+  // if no places are found, return empty results
+  if (results.length === 0) {
+    return res.json({ currentPlace, placesNearby });
+  }
 
   // try to get current place
   currentPlace = getCurrentPlace(results, +lat, +long);

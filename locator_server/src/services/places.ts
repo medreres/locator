@@ -14,21 +14,9 @@ export async function findPlaces(params: IParams): Promise<IVenue[]> {
   let results: IVenue[] | undefined = await fetchPlaces(params);
   let radius = +params.radius;
   while (radius < MAX_RADIUS && radius > MIN_RADIUS) {
-    // TODO Зараз ĸроĸ зміни радіусу - завжди 20%, можна спробувати зробити його більш гнучĸим
-    const dx = results.length / EXPECTED_NUMBER_OF_PLACES || 1;
-    if (results.length >= EXPECTED_NUMBER_OF_PLACES) {
-      radius = Math.round(+radius - radius * dx);
-    } else {
-      const growth = dx === 1 ? dx : 1 - dx;
-      radius = Math.round(+radius + radius * growth);
-    }
-
-    // bear in mind boundary conditions which may be jumped over
-    if (radius > MAX_RADIUS) radius = MAX_RADIUS;
-    else if (radius < MIN_RADIUS) radius = MIN_RADIUS;
+    radius = getRadius(radius, results.length);
 
     console.log("results.length", results.length);
-    console.log("dx", dx);
     console.log("radius", radius);
 
     // update value in params object
@@ -59,4 +47,20 @@ export function getCurrentPlace(results: IVenue[], lat: number, long: number) {
   }
 
   return result;
+}
+
+function getRadius(radius: number, numberOfPlaces: number) {
+  const dx = numberOfPlaces / EXPECTED_NUMBER_OF_PLACES || 1;
+  if (numberOfPlaces >= EXPECTED_NUMBER_OF_PLACES) {
+    radius = Math.round(+radius - radius * dx);
+  } else {
+    const growth = dx === 1 ? dx : 1 - dx;
+    radius = Math.round(+radius + radius * growth);
+  }
+
+  // bear in mind boundary conditions which may be jumped over
+  if (radius > MAX_RADIUS) radius = MAX_RADIUS;
+  else if (radius < MIN_RADIUS) radius = MIN_RADIUS;
+
+  return radius;
 }
