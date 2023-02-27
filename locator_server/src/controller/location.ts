@@ -42,10 +42,10 @@ export const getLocation = async (req: Request, res: Response) => {
   // validate latitude and longitude
   if (!long || !lat) return res.status(400).json({ error: "Invalid longitude or latitude" });
   // check if radius is valid
-  if (radius < MIN_RADIUS || radius > MAX_RADIUS)
+  if (radius <= MIN_RADIUS || radius >= MAX_RADIUS)
     return res.status(400).json({ error: "Invalid radius. Out of range" });
   // check if limit is valid
-  if (limit < 0 || limit > FETCH_MAX_PLACES) return res.status(400).json({ error: "Invalid limit Out of range" });
+  if (limit < 0 || limit > FETCH_MAX_PLACES) return res.status(400).json({ error: "Invalid limit. Out of range" });
 
   const params: IParams = {
     ll: `${lat},${long}`,
@@ -65,7 +65,7 @@ export const getLocation = async (req: Request, res: Response) => {
   // if places are way too much, make radius lesser
   // do until number of places is as expected or radius is too big/small
 
-  while (radius <= MAX_RADIUS && radius >= MIN_RADIUS) {
+  while (radius < MAX_RADIUS && radius > MIN_RADIUS) {
     // ? In separate function this block ?
     if (results.length >= limit) {
       radius = Math.round(+radius * 0.8);
@@ -79,8 +79,6 @@ export const getLocation = async (req: Request, res: Response) => {
 
     // update value in params object
     params.radius = radius.toString();
-
-    console.log("radius", radius);
 
     const newResult = await fetchPlaces(params);
 
@@ -100,7 +98,7 @@ export const getLocation = async (req: Request, res: Response) => {
   // if there is a place withing error margin, chose the place as current
   const { latitude: lat1, longitude: long1 } = results[0].geocodes.main;
   const distance = getDistanceFromLatLonInM(+lat, +long, lat1, long1);
-  
+
   if (distance < ERROR_MARGIN) {
     result = results[0];
   }

@@ -1,9 +1,18 @@
-import { Typography, Chip, Grid } from "@mui/material";
+import { Typography, Chip, Grid, CircularProgress } from "@mui/material";
 import { Location } from "../interfaces/venue";
 interface ILocations {
   location: Location | null;
+  isPending: boolean;
 }
-export default function Locations({ location }: ILocations) {
+export default function Locations({ location, isPending }: ILocations) {
+  if (isPending)
+    return (
+      <CircularProgress
+        sx={{ mt: 5 }}
+        size="5em"
+      />
+    );
+
   return (
     <>
       {location != null && (

@@ -7,8 +7,10 @@ import SelectCategories from "./SelectCategories";
 
 interface ISearchForm {
   setLocation: (result: any) => void;
+  setIsPending: (flag: boolean) => void;
+  isPending: boolean;
 }
-export default function SearchForm({ setLocation }: ISearchForm) {
+export default function SearchForm({ setLocation, setIsPending, isPending }: ISearchForm) {
   const latRef = useRef<HTMLInputElement>(null);
   const limitRef = useRef<HTMLInputElement>(null);
   const radiusRef = useRef<HTMLInputElement>(null);
@@ -16,6 +18,8 @@ export default function SearchForm({ setLocation }: ISearchForm) {
 
   const handleRequest = (e: any) => {
     e.preventDefault();
+
+    setIsPending(true);
 
     const ll = latRef.current!.value;
     const [lat, long] = ll.split(",").map((value) => value.trim());
@@ -30,7 +34,10 @@ export default function SearchForm({ setLocation }: ISearchForm) {
       radius: radius,
       categories: categoriesId,
     };
-    getLocation(params).then((result) => setLocation(result));
+    getLocation(params).then((result) => {
+      setLocation(result);
+      setIsPending(false);
+    });
   };
 
   return (
@@ -62,8 +69,8 @@ export default function SearchForm({ setLocation }: ISearchForm) {
         required
         inputRef={radiusRef}
         inputProps={{
-          max: 3000,
-          min: 30,
+          max: 99999,
+          min: 31,
           defaultValue: 100,
         }}
         label="Starting radius"
@@ -74,6 +81,7 @@ export default function SearchForm({ setLocation }: ISearchForm) {
         setCategory={setCategories}
       />
       <Button
+        disabled={isPending}
         type="submit"
         variant="outlined">
         Get Location
