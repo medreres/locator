@@ -1,35 +1,23 @@
-import { IVenue } from "../model/venue";
 import { STARTING_RADIUS, FETCH_MAX_PLACES } from "../config/default.json";
 import axios from "axios";
+import { buildUrl } from "../util/buildUrl";
+import { IVenue } from "../interfaces/venue";
+import { IParams } from "../interfaces/api";
 
 /**
- * 
- * @param lat latitude 
- * @param long longtitude
- * @param radius search radius
- * @param limit limit of places fetched
- * @param categories ids of categories
+ *
+ * @param {IParams} params object with parameters to filter
  * @returns all the places nearby, filtered by params
  */
-export async function fetchPlaces(
-  lat: string,
-  long: string,
-  radius: number = STARTING_RADIUS,
-  limit: number = FETCH_MAX_PLACES,
-  categories: string = ""
-): Promise<IVenue[]> {
-  const BASE_URL = "https://api.foursquare.com";
-  const response = await axios.get(BASE_URL + "/v3/places/search", {
+export async function fetchPlaces(params: IParams): Promise<IVenue[]> {
+  const url = "/v3/places/search";
+  const base = "https://api.foursquare.com";
+  const buildedUrl = buildUrl(url, base, params);
+
+  const response = await axios.get(buildedUrl.toString(), {
     headers: {
       Accept: "application/json",
-      Authorization: process.env.FORSQUARE_TOKEN as string,
-    },
-    params: {
-      radius: radius.toString(), // radius in meters
-      categories: categories, // ids of categories of possible places
-      ll: `${lat},${long}`, // coordinates
-      limit: limit.toString(), // limit of places fetched
-      sort: "DISTANCE", // sort by distance ascending
+      Authorization: process.env.FOURSQUARE_TOKEN as string,
     },
   });
 

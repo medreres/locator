@@ -1,7 +1,7 @@
 declare global {
     namespace NodeJS {
       interface ProcessEnv {
-        FORSQUARE_TOKEN: string;
+        FOURSQUARE_TOKEN: string;
       }
     }
   }

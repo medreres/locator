@@ -1,5 +1,4 @@
-import { IVenue } from "../model/venue";
-import { STARTING_RADIUS, MAX_RADIUS } from "../config/default.json";
+import { IVenue } from "../interfaces/venue";
 
 /**
  * Point with coordinates in longtitude and latitude
