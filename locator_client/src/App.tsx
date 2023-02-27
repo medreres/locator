@@ -1,11 +1,8 @@
-import { Button, Chip, MenuItem, OutlinedInput, Select, SelectChangeEvent, TextField } from "@mui/material";
-import { Box, Stack } from "@mui/system";
-import { useRef, useState } from "react";
-import { getLocation } from "./api/location";
+import { Box } from "@mui/system";
+import { useState } from "react";
 import Locations from "./components/Locations";
 import SearchForm from "./components/SearchForm";
-import SelectCategories from "./components/SelectCategories";
-import { Location } from "./models/venue";
+import { Location } from "./interfaces/venue";
 
 function App() {
   const [location, setLocation] = useState<Location | null>(null);

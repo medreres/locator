@@ -1,12 +1,5 @@
+import { IParams } from "../interfaces/venue";
 import { buildUrl } from "../util/buildUrl";
-
-export interface IParams {
-  latitude: string;
-  longtitude: string;
-  radius?: number;
-  limit?: number;
-  category: string;
-}
 export const getLocation = async (params: IParams) => {
   const url = "/location",
     base = "http://localhost:3173";

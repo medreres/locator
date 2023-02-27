@@ -1,13 +1,14 @@
-import { IParams } from "../api/location";
+import { IParams } from "../interfaces/venue";
 
-export function buildUrl(url: string, base: string, params: IParams): URL {
+export function buildUrl(url: string, base: string, params?: IParams): URL {
   const buildUrl = new URL(url, base);
-  Object.entries(params).forEach(([key, value]: [string, string | string[]]) => {
-    if (!value) return;
+  if (params)
+    Object.entries(params).forEach(([key, value]: [string, string | string[]]) => {
+      if (!value) return;
 
-    if (Array.isArray(value)) return buildUrl.searchParams.append(key, value.join(","));
+      if (Array.isArray(value)) return buildUrl.searchParams.append(key, value.join(","));
 
-    buildUrl.searchParams.append(key, value.toString());
-  });
+      buildUrl.searchParams.append(key, value.toString());
+    });
   return buildUrl;
 }

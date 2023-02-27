@@ -1,6 +1,7 @@
 import { Button, Stack, TextField } from "@mui/material";
 import { useRef, useState } from "react";
-import { getLocation, IParams } from "../api/location";
+import { getLocation } from "../api/location";
+import { IParams } from "../interfaces/venue";
 import { formatCategories } from "../util/formatCategories";
 import SelectCategories from "./SelectCategories";
 
@@ -10,8 +11,8 @@ interface ISearchForm {
 export default function SearchForm({ setLocation }: ISearchForm) {
   const latRef = useRef<HTMLInputElement>(null);
   const limitRef = useRef<HTMLInputElement>(null);
-  const radiustRef = useRef<HTMLInputElement>(null);
-  const [category, setCategory] = useState<string[]>([]);
+  const radiusRef = useRef<HTMLInputElement>(null);
+  const [categories, setCategories] = useState<string[]>([]);
 
   const handleRequest = (e: any) => {
     e.preventDefault();
@@ -19,15 +20,15 @@ export default function SearchForm({ setLocation }: ISearchForm) {
     const ll = latRef.current!.value;
     const [lat, long] = ll.split(",").map((value) => value.trim());
     const limit = limitRef.current!.value;
-    const radius = radiustRef.current!.value;
-    const categoriesId: string = formatCategories(category);
+    const radius = radiusRef.current!.value;
+    const categoriesId: string = formatCategories(categories);
 
     const params: IParams = {
       latitude: lat,
-      longtitude: long,
-      limit: +limit,
-      radius: +radius,
-      category: categoriesId,
+      longitude: long,
+      limit: limit,
+      radius: radius,
+      categories: categoriesId,
     };
     getLocation(params).then((result) => setLocation(result));
   };
@@ -43,7 +44,7 @@ export default function SearchForm({ setLocation }: ISearchForm) {
         required
         defaultValue={"49.807416209212136, 23.978051904925795"}
         inputRef={latRef}
-        label="Latitute, Longtitude"
+        label="Latitute, Longitutde"
         type="text"
       />
       <TextField
@@ -52,25 +53,25 @@ export default function SearchForm({ setLocation }: ISearchForm) {
         inputProps={{
           max: 50,
           min: 1,
-          defaultValue: 25,
+          defaultValue: 10,
         }}
         label="Limit"
         type="number"
       />
       <TextField
         required
-        inputRef={radiustRef}
+        inputRef={radiusRef}
         inputProps={{
           max: 3000,
           min: 30,
-          defaultValue: 200,
+          defaultValue: 100,
         }}
-        label="Radius"
+        label="Starting radius"
         type="number"
       />
       <SelectCategories
-        category={category}
-        setCategory={setCategory}
+        category={categories}
+        setCategory={setCategories}
       />
       <Button
         type="submit"

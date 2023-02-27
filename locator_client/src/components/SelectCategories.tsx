@@ -1,18 +1,4 @@
-import {
-  SelectChangeEvent,
-  Select,
-  OutlinedInput,
-  Box,
-  Chip,
-  MenuItem,
-  Theme,
-  useTheme,
-  FormControl,
-  InputLabel,
-  Autocomplete,
-  TextField,
-} from "@mui/material";
-import { useState } from "react";
+import { FormControl, Autocomplete, TextField } from "@mui/material";
 import categories from "../data/categoriesId.json";
 
 interface ISelectCategories {

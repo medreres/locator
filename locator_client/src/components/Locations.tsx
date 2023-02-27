@@ -1,6 +1,5 @@
-import { Typography, Stack, Chip, Grid } from "@mui/material";
-import React from "react";
-import { Location } from "../models/venue";
+import { Typography, Chip, Grid } from "@mui/material";
+import { Location } from "../interfaces/venue";
 interface ILocations {
   location: Location | null;
 }
@@ -47,7 +46,16 @@ export default function Locations({ location }: ILocations) {
                     item
                     key={place.fsq_id}>
                     <Chip
-                      label={place.name}
+                      sx={{
+                        textAlign: "center",
+                      }}
+                      label={
+                        <span>
+                          {place.name}
+                          <br />
+                          {place.distance}m
+                        </span>
+                      }
                       variant="outlined"
                     />
                   </Grid>
