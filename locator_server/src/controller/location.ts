@@ -1,7 +1,7 @@
 import { IVenue } from "../interfaces/venue";
 import { Request, Response } from "express";
 import { getNearbyPlaces } from "../util/format";
-import { STARTING_RADIUS, EXPECTED_NUMBER_OF_PLACES } from "../config/default.json";
+import { STARTING_RADIUS, LIMIT_NUMBER_OF_PLACES } from "../config/default.json";
 import { IParams } from "../interfaces/api";
 import { parseLocationParams } from "../util/parse";
 import { findPlaces, getCurrentPlace } from "../services/places";
@@ -32,7 +32,7 @@ export const getLocation = async (req: Request, res: Response) => {
   // extract the params needed for request
   let categories, lat, long;
   try {
-    ({ categories, lat, long } = parseLocationParams(req));
+    ({ categories, lat, long } = parseLocationParams(req));     
   } catch (err) {
     return res.status(404).json({ error: (err as any).message });
   }
@@ -44,7 +44,7 @@ export const getLocation = async (req: Request, res: Response) => {
   const params: IParams = {
     ll: `${lat},${long}`,
     radius: STARTING_RADIUS.toString(),
-    limit: EXPECTED_NUMBER_OF_PLACES.toString(),
+    limit: LIMIT_NUMBER_OF_PLACES.toString(),
     categories: categories.toString(),
     sort: "DISTANCE",
   };

@@ -11,19 +11,27 @@ import { getDistanceFromLatLonInM } from "../util/format";
 // do until number of places is as expected or radius is too big/small
 
 export async function findPlaces(params: IParams): Promise<IVenue[]> {
-  // TODO cache responses
   let results: IVenue[] | undefined = await fetchPlaces(params);
   let radius = +params.radius;
   while (radius < MAX_RADIUS && radius > MIN_RADIUS) {
     // TODO Зараз ĸроĸ зміни радіусу - завжди 20%, можна спробувати зробити його більш гнучĸим
-    if (results?.length >= EXPECTED_NUMBER_OF_PLACES) {
-      radius = Math.round(+radius * 0.8);
+
+    // console.log("results.length", results.length);
+    const dx = results.length / EXPECTED_NUMBER_OF_PLACES || 1;
+
+    if (results.length >= EXPECTED_NUMBER_OF_PLACES) {
+      radius = Math.round(+radius - radius * dx);
     } else {
-      radius = Math.round(+radius * 1.2);
+      radius = Math.round(+radius + radius * dx);
     }
+
     // bear in mind boundary conditions which may be jumped over
     if (radius > MAX_RADIUS) radius = MAX_RADIUS;
     else if (radius < MIN_RADIUS) radius = MIN_RADIUS;
+
+    console.log("results.length", results.length);
+    console.log("dx", dx);
+    console.log("radius", radius);
 
     // update value in params object
     params.radius = radius.toString();
